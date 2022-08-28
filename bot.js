@@ -11,26 +11,71 @@ const vk = new VK({
 	token: config.token
 });
 
+let isFollowing = false
+
+// ! Надо доделать рассылку нового расписания
+// vk.api.messages.send({
+//     random_id: 0,
+//     user_id: 329056111,
+//     peer_id: 329056111,
+//     message: 'Новое расписание'
+// })
+
 // подключение слушателя событий
 const bot = new HearManager()
 
+function checkFollowing(msg) {
+    vk.api.groups.isMember({
+        group_id: 211782829,
+        user_id: msg.senderId
+    }).then((response) => {
+        if(response == 0) {
+            isFollowing = false
+        }
+        if(response== 1) {
+            isFollowing = true
+        }
+    });
+}
 // слушает событие по новым сообщениям
 vk.updates.on('message_new', bot.middleware)
 
 bot.hear(/начать/i, msg => {
-    msg.send('Привет. Я бот, который будет скидывать тебе расписание, ссылки на дистанционное обучение, книги, ответы, почты и конечно обеденные перерывы. Если хотите знать какие команды я знаю, то просто напишите в поле ввода слово "команды"')
+    vk.api.groups.isMember({
+        group_id: 211782829,
+        user_id: msg.senderId
+    }).then((response) => {
+        if(response == 0) {
+            msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab.\n p. s. Также прошу обратить ваше внимание, что пока вы не подпишетесь ни одна команда бота работать не будет :(');
+            isFollowing = false
+        }
+        if(response== 1) {
+            msg.send('Привет. Я бот, который будет скидывать тебе расписание, ссылки на дистанционное обучение, книги, ответы, почты и конечно обеденные перерывы. Если хотите знать какие команды я знаю, то просто напишите в поле ввода слово "команды" \n Ссылка на вк моего создателя: @evollt')
+            isFollowing = true
+        }
+    });
 })
 
 bot.hear(/ссылки/i, msg => {
-    msg.send('Постоянные ссылки преподавателей для дистанционного обучения: https://docs.google.com/spreadsheets/d/1F7nprxnJRvl7cA-33-L9UmojJunsP7niDfwEep3_K0s/edit?usp=sharing')
+    checkFollowing(msg)
+    if(isFollowing == true) {
+        msg.send('Постоянные ссылки преподавателей для дистанционного обучения: https://docs.google.com/spreadsheets/d/1F7nprxnJRvl7cA-33-L9UmojJunsP7niDfwEep3_K0s/edit?usp=sharing')
+    } else {
+        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab')
+    }
 })
 
-bot.hear(/почты/i, (msg) => {
-
-    msg.send(mails.join(''))
+bot.hear(/почты/i, msg => {
+    checkFollowing(msg)
+    if(isFollowing == true) {
+        msg.send(mails.join(''))
+    } else {
+        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab')
+    }
 })
 
 bot.hear(/команды/i, msg => {
+    checkFollowing(msg)
     msg.send(`
         Мои команды:\n
             \t 1. Расписание
@@ -43,26 +88,56 @@ bot.hear(/команды/i, msg => {
 })
 
 bot.hear(/обед/i, (msg) => {
-    msg.sendPhotos({ value: './files/dinner.png' })
+    checkFollowing(msg)
+    if(isFollowing == true) {
+        msg.sendPhotos({ value: './files/dinner.png' })
+    } else {
+        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab')
+    }
 })
 
 bot.hear(/книги/i, msg => {
-    let files = fs.readdirSync('./books')
+    checkFollowing(msg)
+    if(isFollowing == true) {
+        let files = fs.readdirSync('./books')
 
-    for(file in files) {
-        msg.sendDocuments({ value: `./books/${files[file]}`, filename: files[file] })
+        for(file in files) {
+            msg.sendDocuments({ value: `./books/${files[file]}`, filename: files[file] })
+        }
+    } else {
+        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab')
     }
 })
 
 bot.hear(/ответы/i, msg => {
-    msg.send('Ответы Голицинский: https://otvetkin.info/reshebniki/5-klass/angliyskiy-yazyk/golicynskij-7')
-    msg.send('Решебник Абрамяна: https://uteacher.ru/reshebnik-abramyan/')
-    msg.sendDocuments({ value: './answers/Ответы(Аракин).pdf', filename: 'Ответы(Аракин).pdf' })
+    checkFollowing(msg)
+    if(isFollowing == true) {
+        msg.send('Ответы Голицинский: https://otvetkin.info/reshebniki/5-klass/angliyskiy-yazyk/golicynskij-7')
+        msg.send('Решебник Абрамяна: https://uteacher.ru/reshebnik-abramyan/')
+        msg.sendDocuments({ value: './answers/Ответы(Аракин).pdf', filename: 'Ответы(Аракин).pdf' })
+    } else {
+        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab')
+    }
 })
 
 bot.hear(/расписание/i, msg => {
-    msg.send(`${text[4]}${text[5]}${text[6]}: ${links[5]}`)
-    msg.send(`${text[10]}${text[11]}${text[12]}: ${links[11]}`)
+    checkFollowing(msg)
+    if(isFollowing == true) {
+        msg.send(`${text[4]}${text[5]}${text[6]}: ${links[5]}`)
+        msg.send(`${text[10]}${text[11]}${text[12]}: ${links[11]}`)
+    } else {
+        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab')
+    }
+})
+
+bot.hear(/мой id/i, msg => {
+    checkFollowing(msg)
+    if(isFollowing == true) {
+        let senderId = msg.senderId;
+        msg.send(senderId)
+    } else {
+        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab')
+    }
 })
 
 console.log('Бот запущен')
