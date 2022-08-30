@@ -58,6 +58,7 @@ setInterval(function() {
 vk.updates.on('message_new', bot.middleware)
 
 bot.hear(/начать/i, msg => {
+    // проверка на подписку
     vk.api.groups.isMember({
         group_id: 211782829,
         user_id: msg.senderId
