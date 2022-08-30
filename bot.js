@@ -5,6 +5,7 @@ const config = require('./config.json')
 const fs = require('fs')
 const { parsLinks, parsText } = require('./controllers/ParserController.js')
 const { mails } = require('./files/mails')
+const { builder } = require('./controllers/KeyboardController')
 
 // инициализация бота
 const vk = new VK({
@@ -62,13 +63,21 @@ bot.hear(/начать/i, msg => {
     vk.api.groups.isMember({
         group_id: 211782829,
         user_id: msg.senderId
-    }).then((response) => {
+    }).then(async (response) => {
         if(response == 0) {
             msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab.\n p. s. Также прошу обратить ваше внимание, что пока вы не подпишетесь ни одна команда бота работать не будет :(');
             isFollowing = false
         }
         if(response== 1) {
-            msg.send('Привет. Я бот, который будет скидывать тебе расписание, ссылки на дистанционное обучение, книги, ответы, почты и конечно обеденные перерывы. Если хотите знать какие команды я знаю, то просто напишите в поле ввода слово "команды" \n Ссылка на вк моего создателя: @evollt')
+            // ! короче говоря, с клавой еще надо разобраться(
+            await vk.api.messages.send({
+                // ...
+                random_id: 0,
+                user_id: msg.senderId,
+                peer_id: msg.senderId,
+                message: 'Привет. Я бот, который будет скидывать тебе расписание, ссылки на дистанционное обучение, книги, ответы, почты и конечно обеденные перерывы. Если хотите знать какие команды я знаю, то просто напишите в поле ввода слово "команды" \n Ссылка на вк моего создателя: @evollt',
+                keyboard: builder
+            });
             isFollowing = true
         }
     });
