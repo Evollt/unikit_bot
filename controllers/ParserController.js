@@ -14,6 +14,7 @@ axios.get('https://www.mgkit.ru/studentu/raspisanie-zanatij').then(html => {
         if(href?.includes('https://drive.google.com/file/d/')) {
             parsLinks.push(href)
             parsText.push($(elem).text())
+            console.log(href);
         }
     })
 })

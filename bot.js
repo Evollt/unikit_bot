@@ -152,8 +152,9 @@ bot.hear(/ответы/i, msg => {
 bot.hear(/расписание/i, msg => {
     checkFollowing(msg)
     if(isFollowing == true) {
-        msg.send(`${text[4]}${text[5]}${text[6]}: ${links[5]}`)
-        msg.send(`${text[10]}${text[11]}${text[12]}: ${links[11]}`)
+        // msg.send(`${text[4]}${text[5]}${text[6]}: ${links[5]}`)
+        // msg.send(`${text[10]}${text[11]}${text[12]}: ${links[11]}`)
+        msg.send(`${text[2]}: ${links[2]}`)
     } else {
         msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab')
     }
