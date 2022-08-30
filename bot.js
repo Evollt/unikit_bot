@@ -3,7 +3,7 @@ const { VK } = require('vk-io')
 const { HearManager } = require('@vk-io/hear')
 const config = require('./config.json')
 const fs = require('fs')
-const { links, text } = require('./parser.js')
+const { parsLinks, parsText } = require('./controllers/ParserController.js')
 const { mails } = require('./files/mails')
 
 // инициализация бота
@@ -11,7 +11,9 @@ const vk = new VK({
 	token: config.token
 });
 
-let isFollowing = false
+let isFollowing = true
+let text = []
+let links = []
 
 // ! Надо доделать рассылку нового расписания
 // vk.api.messages.send({
@@ -21,9 +23,11 @@ let isFollowing = false
 //     message: 'Новое расписание'
 // })
 
+
 // подключение слушателя событий
 const bot = new HearManager()
 
+// проверка подписки на канал бота
 function checkFollowing(msg) {
     vk.api.groups.isMember({
         group_id: 211782829,
@@ -37,6 +41,19 @@ function checkFollowing(msg) {
         }
     });
 }
+
+setTimeout(function() {
+    text = parsText
+    links = parsLinks
+    console.log('Обновлено первый раз')
+}, 5000)
+
+setInterval(function() {
+    text = parsText
+    links = parsLinks
+    console.log('Обновлено')
+}, 30*60*1000);
+
 // слушает событие по новым сообщениям
 vk.updates.on('message_new', bot.middleware)
 
@@ -96,13 +113,15 @@ bot.hear(/обед/i, (msg) => {
     }
 })
 
-bot.hear(/книги/i, msg => {
+bot.hear(/книги/i, async msg => {
     checkFollowing(msg)
     if(isFollowing == true) {
         let files = fs.readdirSync('./books')
 
         for(file in files) {
-            msg.sendDocuments({ value: `./books/${files[file]}`, filename: files[file] })
+            // ! Доделать. Когдм отправляются книги, то vk со временем закрывает доступ из-за времени ответа бота
+            // ? Вроде бы исправил баг, который описан выше, но как бы надо бы попозже потестить еще
+            await msg.sendDocuments({ value: `./books/${files[file]}`, filename: files[file] })
         }
     } else {
         msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab')
@@ -139,6 +158,7 @@ bot.hear(/мой id/i, msg => {
         msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab')
     }
 })
+
 
 console.log('Бот запущен')
 // включает работу бота и реакцию, также логирует ошибки
