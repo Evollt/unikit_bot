@@ -58,7 +58,7 @@ setInterval(function() {
 // слушает событие по новым сообщениям
 vk.updates.on('message_new', bot.middleware)
 
-bot.hear('начать'.toLowerCase(), msg => {
+bot.hear(/^начать$/i, msg => {
     // проверка на подписку
     vk.api.groups.isMember({
         group_id: 211782829,
@@ -69,7 +69,6 @@ bot.hear('начать'.toLowerCase(), msg => {
             isFollowing = false
         }
         if(response== 1) {
-            // ! короче говоря, с клавой еще надо разобраться(
             await vk.api.messages.send({
                 // ...
                 random_id: 0,
@@ -83,7 +82,7 @@ bot.hear('начать'.toLowerCase(), msg => {
     });
 })
 
-bot.hear('ссылки'.toLowerCase(), msg => {
+bot.hear(/^ссылки$/i, msg => {
     checkFollowing(msg)
     if(isFollowing == true) {
         msg.send('Постоянные ссылки преподавателей для дистанционного обучения: https://docs.google.com/spreadsheets/d/1F7nprxnJRvl7cA-33-L9UmojJunsP7niDfwEep3_K0s/edit?usp=sharing')
@@ -92,7 +91,7 @@ bot.hear('ссылки'.toLowerCase(), msg => {
     }
 })
 
-bot.hear('почты'.toLowerCase(), msg => {
+bot.hear(/^почты$/i, msg => {
     checkFollowing(msg)
     if(isFollowing == true) {
         msg.send(mails.join(''))
@@ -101,7 +100,7 @@ bot.hear('почты'.toLowerCase(), msg => {
     }
 })
 
-bot.hear('команды'.toLowerCase(), msg => {
+bot.hear(/^команды$/i, msg => {
     checkFollowing(msg)
     msg.send(`
         Мои команды:\n
@@ -114,7 +113,7 @@ bot.hear('команды'.toLowerCase(), msg => {
     `)
 })
 
-bot.hear('обед'.toLowerCase(), (msg) => {
+bot.hear(/^обед$/i, (msg) => {
     checkFollowing(msg)
     if(isFollowing == true) {
         msg.sendPhotos({ value: './files/dinner.png' })
@@ -123,7 +122,7 @@ bot.hear('обед'.toLowerCase(), (msg) => {
     }
 })
 
-bot.hear('книги'.toLowerCase(), async msg => {
+bot.hear(/^книги$/i, async msg => {
     checkFollowing(msg)
     if(isFollowing == true) {
         let files = fs.readdirSync('./books')
@@ -138,7 +137,7 @@ bot.hear('книги'.toLowerCase(), async msg => {
     }
 })
 
-bot.hear('ответы'.toLowerCase(), msg => {
+bot.hear(/^ответы$/i, msg => {
     checkFollowing(msg)
     if(isFollowing == true) {
         msg.send('Ответы Голицинский: https://otvetkin.info/reshebniki/5-klass/angliyskiy-yazyk/golicynskij-7')
@@ -149,7 +148,7 @@ bot.hear('ответы'.toLowerCase(), msg => {
     }
 })
 
-bot.hear('расписание'.toLowerCase(), msg => {
+bot.hear(/^расписание$/i, msg => {
     checkFollowing(msg)
     if(isFollowing == true) {
         // msg.send(`${text[4]}${text[5]}${text[6]}: ${links[5]}`)
@@ -160,7 +159,7 @@ bot.hear('расписание'.toLowerCase(), msg => {
     }
 })
 
-bot.hear('мой id'.toLowerCase(), msg => {
+bot.hear(/^мой id$/i, msg => {
     checkFollowing(msg)
     if(isFollowing == true) {
         let senderId = msg.senderId;
