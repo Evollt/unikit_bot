@@ -174,6 +174,16 @@ bot.hear(/^мой id$/i, msg => {
     }
 })
 
+bot.hear(/^расписание препод$/i, msg => {
+    checkFollowing(msg)
+    if(isFollowing == true) {
+        msg.send(`${text[1]}: ${links[1]}`)
+        msg.send(`${text[3]}${text[4]}${text[5]}: ${links[4]}`)
+    } else {
+        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab')
+    }
+})
+
 
 console.log('Бот запущен')
 // включает работу бота и реакцию, также логирует ошибки

@@ -8,6 +8,12 @@ const builder = Keyboard.builder()
 			command: 'dairy'
 		}
 	})
+	.textButton({
+		label: 'Расписание препод',
+		payload: {
+			command: 'prepod_dairy'
+		}
+	})
 	.row()
 	.textButton({
 		label: 'Ссылки',
