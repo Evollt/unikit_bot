@@ -158,6 +158,7 @@ bot.hear(/^расписание$/i, msg => {
         // msg.send(`${text[4]}${text[5]}${text[6]}: ${links[5]}`)
         // msg.send(`${text[10]}${text[11]}${text[12]}: ${links[11]}`)
         msg.send(`${text[2]}: ${links[2]}`)
+        msg.send(`${text[6]}${text[7]}${text[8]}: ${links[7]}`)
     } else {
         msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab')
     }
