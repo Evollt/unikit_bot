@@ -25,14 +25,13 @@ let links = []
 //     message: 'Новое расписание'
 // })
 
-
 // подключение слушателя событий
 const bot = new HearManager()
 
 // проверка подписки на канал бота
 function checkFollowing(msg) {
     vk.api.groups.isMember({
-        group_id: 211782829,
+        group_id: 215715933,
         user_id: msg.senderId
     }).then((response) => {
         if(response == 0) {
@@ -64,7 +63,7 @@ vk.updates.on('message_new', bot.middleware)
 bot.hear(/^начать$/i, msg => {
     // проверка на подписку
     vk.api.groups.isMember({
-        group_id: 211782829,
+        group_id: 215715933,
         user_id: msg.senderId
     }).then(async (response) => {
         if(response == 0) {
