@@ -9,7 +9,7 @@ const { builder } = require('./controllers/KeyboardController')
 
 // инициализация бота
 const vk = new VK({
-	token: config.token
+	token: process.env.TOKEN
 });
 
 // начальные переменные для будущего использования
@@ -37,7 +37,7 @@ function checkFollowing(msg) {
         if(response == 0) {
             isFollowing = false
         }
-        if(response== 1) {
+        if(response == 1) {
             isFollowing = true
         }
     });
