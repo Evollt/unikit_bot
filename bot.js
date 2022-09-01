@@ -12,6 +12,7 @@ const vk = new VK({
 	token: config.token
 });
 
+// начальные переменные для будущего использования
 let isFollowing = true
 let text = []
 let links = []
@@ -43,12 +44,14 @@ function checkFollowing(msg) {
     });
 }
 
+// парсит в самом начале работы сервера через 5 секунд
 setTimeout(function() {
     text = parsText
     links = parsLinks
     console.log('Обновлено первый раз')
 }, 5000)
 
+// каждые 15 минут обновляет вывод информации парсером
 setInterval(function() {
     text = parsText
     links = parsLinks
@@ -69,6 +72,7 @@ bot.hear(/^начать$/i, msg => {
             isFollowing = false
         }
         if(response== 1) {
+            // выводит на экран клавиатуру и отправляет приветственное сообщение
             await vk.api.messages.send({
                 // ...
                 random_id: 0,
@@ -93,6 +97,7 @@ bot.hear(/^ссылки$/i, msg => {
 
 bot.hear(/^почты$/i, msg => {
     checkFollowing(msg)
+    // берет массив mails и массив в нем соединяет, потом отпрвляет сразу весь список
     if(isFollowing == true) {
         msg.send(mails.join(''))
     } else {
@@ -101,7 +106,6 @@ bot.hear(/^почты$/i, msg => {
 })
 
 bot.hear(/^команды$/i, msg => {
-    checkFollowing(msg)
     msg.send(`
         Мои команды:\n
             \t 1. Расписание
@@ -116,6 +120,7 @@ bot.hear(/^команды$/i, msg => {
 bot.hear(/^обед$/i, (msg) => {
     checkFollowing(msg)
     if(isFollowing == true) {
+        // отправляет фотографию с обедом
         msg.sendPhotos({ value: './files/dinner.png' })
     } else {
         msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab')
@@ -125,11 +130,10 @@ bot.hear(/^обед$/i, (msg) => {
 bot.hear(/^книги$/i, async msg => {
     checkFollowing(msg)
     if(isFollowing == true) {
+        // берет названия всех файлов из этой папки и отправляет пользователю
         let files = fs.readdirSync('./books')
 
         for(file in files) {
-            // ! Доделать. Когдм отправляются книги, то vk со временем закрывает доступ из-за времени ответа бота
-            // ? Вроде бы исправил баг, который описан выше, но как бы надо бы попозже потестить еще
             await msg.sendDocuments({ value: `./books/${files[file]}`, filename: files[file] })
         }
     } else {

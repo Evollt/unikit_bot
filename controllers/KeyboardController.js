@@ -1,5 +1,6 @@
 const { Keyboard } = require("vk-io");
 
+// создает builder клавиатуру, которую дальше будем использовать в bot.js
 const builder = Keyboard.builder()
 	.textButton({
 		label: 'Расписание',
