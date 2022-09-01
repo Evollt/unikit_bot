@@ -1,7 +1,6 @@
 // импорт библиотек и модулей
 const { VK } = require('vk-io')
 const { HearManager } = require('@vk-io/hear')
-const config = require('./config.json')
 const fs = require('fs')
 const { parsLinks, parsText } = require('./controllers/ParserController.js')
 const { mails } = require('./files/mails')
