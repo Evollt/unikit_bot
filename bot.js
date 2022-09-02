@@ -8,6 +8,7 @@ const { builder } = require('./controllers/KeyboardController')
 
 // инициализация бота
 const vk = new VK({
+    // получаем токен из heroku
 	token: process.env.TOKEN
 });
 
