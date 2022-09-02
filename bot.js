@@ -66,7 +66,7 @@ bot.hear(/^начать$/i, msg => {
         user_id: msg.senderId
     }).then(async (response) => {
         if(response == 0) {
-            msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab.\n p. s. Также прошу обратить ваше внимание, что пока вы не подпишетесь ни одна команда бота работать не будет :(');
+            msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy.\n p. s. Также прошу обратить ваше внимание, что пока вы не подпишетесь ни одна команда бота работать не будет :(');
             isFollowing = false
         }
         if(response== 1) {
@@ -89,7 +89,7 @@ bot.hear(/^ссылки$/i, msg => {
     if(isFollowing == true) {
         msg.send('Постоянные ссылки преподавателей для дистанционного обучения: https://docs.google.com/spreadsheets/d/1F7nprxnJRvl7cA-33-L9UmojJunsP7niDfwEep3_K0s/edit?usp=sharing')
     } else {
-        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab')
+        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
     }
 })
 
@@ -99,7 +99,7 @@ bot.hear(/^почты$/i, msg => {
     if(isFollowing == true) {
         msg.send(mails.join(''))
     } else {
-        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab')
+        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
     }
 })
 
@@ -121,7 +121,7 @@ bot.hear(/^обед$/i, (msg) => {
         // отправляет фотографию с обедом
         msg.sendPhotos({ value: './files/dinner.png' })
     } else {
-        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab')
+        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
     }
 })
 
@@ -135,7 +135,7 @@ bot.hear(/^книги$/i, async msg => {
             await msg.sendDocuments({ value: `./books/${files[file]}`, filename: files[file] })
         }
     } else {
-        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab')
+        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
     }
 })
 
@@ -146,7 +146,7 @@ bot.hear(/^ответы$/i, msg => {
         msg.send('Решебник Абрамяна: https://uteacher.ru/reshebnik-abramyan/')
         msg.sendDocuments({ value: './answers/Ответы(Аракин).pdf', filename: 'Ответы(Аракин).pdf' })
     } else {
-        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab')
+        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
     }
 })
 
@@ -158,7 +158,7 @@ bot.hear(/^расписание$/i, msg => {
         msg.send(`${text[2]}: ${links[2]}`)
         msg.send(`${text[6]}${text[7]}${text[8]}: ${links[7]}`)
     } else {
-        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab')
+        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
     }
 })
 
@@ -168,7 +168,7 @@ bot.hear(/^мой id$/i, msg => {
         let senderId = msg.senderId;
         msg.send(senderId)
     } else {
-        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab')
+        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
     }
 })
 
@@ -178,7 +178,7 @@ bot.hear(/^расписание препод$/i, msg => {
         msg.send(`${text[1]}: ${links[1]}`)
         msg.send(`${text[3]}${text[4]}${text[5]}: ${links[4]}`)
     } else {
-        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/evolltdairyclab')
+        msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
     }
 })
 
