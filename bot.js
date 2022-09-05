@@ -9,7 +9,7 @@ const { builder } = require('./controllers/KeyboardController')
 // инициализация бота
 const vk = new VK({
     // получаем токен из heroku
-    token: "vk1.a._bW2ukPPPHkL_UNOAIya6Ujcb48_-cWSSO1H7elSshT6UZ9oonPOIZ3V21KqNpM-u04vvU3gn1_7SXOt2OZPRaHYGYkMm3Eve9dtl5UfYzu_QsjHBUxUpimO1OD-_nKN3iK6DebyQ9GZ7peYinZJJaMaq9JAnDqGTHf4KI4Y8PKynVDXQXIDPwCIC_a3g2VV"
+    token: process.env.TOKEN
 });
 
 // начальные переменные для будущего использования
