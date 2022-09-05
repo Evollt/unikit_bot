@@ -46,17 +46,7 @@ setTimeout(parsInfo, 5000)
 
 
 // каждые 15 минут обновляет вывод информации парсером
-setInterval(function () {
-    text = parsText
-    links = parsLinks
-    console.log('Обновлено')
-    vk.api.messages.send({
-        random_id: 0,
-        user_id: 329056111,
-        peer_id: 329056111,
-        message: 'Прошло 15 минут, расписание должно было обновиться'
-    })
-}, 15*60*1000)
+setInterval(parsInfo, 15*60*1000)
 
 // слушает событие по новым сообщениям
 vk.updates.on('message_new', bot.middleware)
