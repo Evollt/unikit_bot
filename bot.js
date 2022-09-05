@@ -5,20 +5,17 @@ const fs = require('fs')
 const { parsLinks, parsText } = require('./controllers/ParserController.js')
 const { mails } = require('./files/mails')
 const { builder } = require('./controllers/KeyboardController')
-// здесь будет база данных, как только найду норм хост с mysql
-// const { connection } = require('./controllers/dbController.js')
 
 // инициализация бота
 const vk = new VK({
     // получаем токен из heroku
-    token: process.env.TOKEN
+    token: "vk1.a._bW2ukPPPHkL_UNOAIya6Ujcb48_-cWSSO1H7elSshT6UZ9oonPOIZ3V21KqNpM-u04vvU3gn1_7SXOt2OZPRaHYGYkMm3Eve9dtl5UfYzu_QsjHBUxUpimO1OD-_nKN3iK6DebyQ9GZ7peYinZJJaMaq9JAnDqGTHf4KI4Y8PKynVDXQXIDPwCIC_a3g2VV"
 });
 
 // начальные переменные для будущего использования
 let isFollowing = true
 let text = []
 let links = []
-// let getUsers = "SELECT * from `users`"
 
 // подключение слушателя событий
 const bot = new HearManager()
@@ -38,26 +35,14 @@ function checkFollowing(msg) {
     });
 }
 
-// создание пользователя, если его уже нет в бд
-// function createUser(msg) {
-//     connection.query(`SELECT * FROM users WHERE user_id=${msg.senderId}`, (err, result) => {
-//         if(result.length == 0) {
-//             connection.query(`INSERT INTO users(user_id, role, sending_status) VALUES(${msg.senderId}, 'user', 1)`, (err, second_result) => {
-//                 if(err) { console.log(err) }
-//                 console.log(second_result)
-//             })
-//         } else {
-//             return ''
-//         }
-//     })
-// }
-
-// парсит в самом начале работы сервера через 5 секунд
-setTimeout(function () {
+function parsInfo() {
     text = parsText
     links = parsLinks
-    console.log('Обновлено первый раз')
-}, 5000)
+    console.log('Обновлено')
+}
+
+// парсит в самом начале работы сервера через 5 секунд
+setTimeout(parsInfo, 5000)
 
 
 // каждые 15 минут обновляет вывод информации парсером
@@ -65,25 +50,14 @@ setInterval(function () {
     text = parsText
     links = parsLinks
     console.log('Обновлено')
-}, 30000);
+    vk.api.messages.send({
+        random_id: 0,
+        user_id: 329056111,
+        peer_id: 329056111,
+        message: 'Прошло 15 минут, расписание должно было обновиться'
+    })
+}, 15*60*1000)
 
-// setInterval(function () {
-//     if(text != parsText) {
-//         // Проходимся по массиву пользователей и пересылаем всем подписчикам сообщения о новом расписании
-//         connection.query(getUsers, (err, results) => {
-//             for(let i = 0; i < results.length; i++) {
-//                 vk.api.messages.send({
-//                     random_id: 0,
-//                     user_id: results[i]['user_id'],
-//                     peer_id: results[i]['user_id'],
-//                     message: 'Появилось новое расписание'
-//                 })
-//             }
-//         })
-//     }
-//     console.log('check')
-// }, 5*60*1000)
-//
 // слушает событие по новым сообщениям
 vk.updates.on('message_new', bot.middleware)
 
@@ -108,8 +82,6 @@ bot.hear(/^начать$/i, msg => {
                 keyboard: builder
             });
             isFollowing = true
-            // создание пользователя для рассылки расписания
-            // createUser(msg)
         }
     });
 })
@@ -118,7 +90,6 @@ bot.hear(/^ссылки$/i, msg => {
     checkFollowing(msg)
     if(isFollowing == true) {
         msg.send('Постоянные ссылки преподавателей для дистанционного обучения: https://docs.google.com/spreadsheets/d/1F7nprxnJRvl7cA-33-L9UmojJunsP7niDfwEep3_K0s/edit?usp=sharing')
-        // createUser(msg)
     } else {
         msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
     }
@@ -129,14 +100,12 @@ bot.hear(/^почты$/i, msg => {
     // берет массив mails и массив в нем соединяет, потом отпрвляет сразу весь список
     if(isFollowing == true) {
         msg.send(mails.join(''))
-        // createUser(msg)
     } else {
         msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
     }
 })
 
 bot.hear(/^команды$/i, msg => {
-    // createUser(msg)
     msg.send(`
         Мои команды:\n
             \t 1. Расписание
@@ -153,7 +122,6 @@ bot.hear(/^обед$/i, (msg) => {
     if(isFollowing == true) {
         // отправляет фотографию с обедом
         msg.sendPhotos({ value: './files/dinner.png' })
-        // createUser(msg)
     } else {
         msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
     }
@@ -168,7 +136,6 @@ bot.hear(/^книги$/i, async msg => {
         for(file in files) {
             await msg.sendDocuments({ value: `./books/${files[file]}`, filename: files[file] })
         }
-        // createUser(msg)
     } else {
         msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
     }
@@ -180,7 +147,6 @@ bot.hear(/^ответы$/i, msg => {
         msg.send('Ответы Голицинский: https://otvetkin.info/reshebniki/5-klass/angliyskiy-yazyk/golicynskij-7')
         msg.send('Решебник Абрамяна: https://uteacher.ru/reshebnik-abramyan/')
         msg.sendDocuments({ value: './answers/Ответы(Аракин).pdf', filename: 'Ответы(Аракин).pdf' })
-        // createUser(msg)
     } else {
         msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
     }
@@ -193,7 +159,6 @@ bot.hear(/^расписание$/i, msg => {
         // msg.send(`${text[10]}${text[11]}${text[12]}: ${links[11]}`)
         msg.send(`${text[2]}: ${links[2]}`)
         msg.send(`${text[6]}${text[7]}${text[8]}: ${links[7]}`)
-        // createUser(msg)
     } else {
         msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
     }
@@ -214,7 +179,6 @@ bot.hear(/^расписание препод$/i, msg => {
     if(isFollowing == true) {
         msg.send(`${text[1]}: ${links[1]}`)
         msg.send(`${text[3]}${text[4]}${text[5]}: ${links[4]}`)
-        // createUser(msg)
     } else {
         msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
     }
