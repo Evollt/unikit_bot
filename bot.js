@@ -35,18 +35,18 @@ function checkFollowing(msg) {
     });
 }
 
-function parsInfo() {
-    text = parsText
-    links = parsLinks
-    console.log('Обновлено')
-}
+// function parsInfo() {
+//     text = parsText
+//     links = parsLinks
+//     console.log('Обновлено')
+// }
 
 // парсит в самом начале работы сервера через 5 секунд
-setTimeout(parsInfo, 5000)
+// setTimeout(parsInfo, 5000)
 
 
 // каждые 15 минут обновляет вывод информации парсером
-setInterval(parsInfo, 15*60*1000)
+// setInterval(parsInfo, 15*60*1000)
 
 // слушает событие по новым сообщениям
 vk.updates.on('message_new', bot.middleware)
@@ -147,8 +147,8 @@ bot.hear(/^расписание$/i, msg => {
     if(isFollowing == true) {
         // msg.send(`${text[4]}${text[5]}${text[6]}: ${links[5]}`)
         // msg.send(`${text[10]}${text[11]}${text[12]}: ${links[11]}`)
-        msg.send(`${text[2]}: ${links[2]}`)
-        msg.send(`${text[6]}${text[7]}${text[8]}: ${links[7]}`)
+        msg.send(`${parsText[2]}: ${parsLinks[2]}`)
+        msg.send(`${parsText[6]}${parsText[7]}${parsText[8]}: ${parsLinks[7]}`)
     } else {
         msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
     }
