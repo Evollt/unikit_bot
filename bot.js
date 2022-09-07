@@ -35,19 +35,6 @@ function checkFollowing(msg) {
     });
 }
 
-// function parsInfo() {
-//     text = parsText
-//     links = parsLinks
-//     console.log('Обновлено')
-// }
-
-// парсит в самом начале работы сервера через 5 секунд
-// setTimeout(parsInfo, 5000)
-
-
-// каждые 15 минут обновляет вывод информации парсером
-// setInterval(parsInfo, 15*60*1000)
-
 // слушает событие по новым сообщениям
 vk.updates.on('message_new', bot.middleware)
 
@@ -126,6 +113,9 @@ bot.hear(/^книги$/i, async msg => {
         for(file in files) {
             await msg.sendDocuments({ value: `./books/${files[file]}`, filename: files[file] })
         }
+        bot.hear('1', msg => {
+            msg.send('Пошел нахуй)')
+        })
     } else {
         msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
     }
