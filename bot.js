@@ -13,8 +13,6 @@ const vk = new VK({
 
 // начальные переменные для будущего использования
 let isFollowing = true
-let text = []
-let links = []
 
 // подключение слушателя событий
 const bot = new HearManager()
@@ -112,9 +110,6 @@ bot.hear(/^книги$/i, async msg => {
         for(file in files) {
             await msg.sendDocuments({ value: `./books/${files[file]}`, filename: files[file] })
         }
-        bot.hear('1', msg => {
-            msg.send('Пошел нахуй)')
-        })
     } else {
         msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
     }
