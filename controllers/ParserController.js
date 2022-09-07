@@ -14,11 +14,13 @@ axios.get('https://www.mgkit.ru/studentu/raspisanie-zanatij').then(html => {
         if(href?.includes('https://drive.google.com/file/d/')) {
             parsLinks.push(href)
             parsText.push($(elem).text())
-            // логируем все данные, чтобы если что легко дебажить)
-            console.log(href);
         }
     })
+    // логируем все данные, чтобы если что легко дебажить)
+    console.log(parsLinks)
+    console.log(parsText)
 })
+
 
 module.exports = {
     parsLinks,

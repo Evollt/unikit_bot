@@ -157,8 +157,8 @@ bot.hear(/^мой id$/i, msg => {
 bot.hear(/^расписание препод$/i, msg => {
     checkFollowing(msg)
     if(isFollowing == true) {
-        msg.send(`${text[1]}: ${links[1]}`)
-        msg.send(`${text[3]}${text[4]}${text[5]}: ${links[4]}`)
+        msg.send(`${parsText[1]}: ${parsLinks[1]}`)
+        msg.send(`${parsText[3]}${parsText[4]}${parsText[5]}: ${parsLinks[4]}`)
     } else {
         msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
     }
