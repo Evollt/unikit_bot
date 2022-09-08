@@ -4,7 +4,8 @@ const { HearManager } = require('@vk-io/hear')
 const fs = require('fs')
 const { mails } = require('./files/mails')
 const { builder } = require('./controllers/KeyboardController')
-const { parser } = require('./controllers/ParserController.js')
+const axios = require('axios')
+const cheerio = require('cheerio')
 
 // инициализация бота
 const vk = new VK({
@@ -131,11 +132,27 @@ bot.hear(/^ответы$/i, msg => {
 bot.hear(/^расписание$/i, msg => {
     checkFollowing(msg)
     if(isFollowing == true) {
-        parser()
+        // парсинг сайта
+        axios.get('https://www.mgkit.ru/studentu/raspisanie-zanatij').then(html => {
+            const $ = cheerio.load(html.data)
+            $('a').each((i, elem) => {
+                let href = $(elem).attr('href')
+                // знак вопроса после переменной стоит из-за includes
+                if(href?.includes('https://drive.google.com/file/d/')) {
+                    parsLinks.push(href)
+                    parsText.push($(elem).text())
+                }
+            })
+            // логируем все данные, чтобы если что легко дебажить)
+            console.log(parsLinks)
+            console.log(parsText)
+
+            msg.send(`${parsText[2]}: ${parsLinks[2]}`)
+            msg.send(`${parsText[6]}${parsText[7]}${parsText[8]}: ${parsLinks[7]}`)
+        })
         // msg.send(`${text[4]}${text[5]}${text[6]}: ${links[5]}`)
         // msg.send(`${text[10]}${text[11]}${text[12]}: ${links[11]}`)
-        msg.send(`${parsText[2]}: ${parsLinks[2]}`)
-        msg.send(`${parsText[6]}${parsText[7]}${parsText[8]}: ${parsLinks[7]}`)
+        console.log('Сообщение отправлено')
     } else {
         msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
     }
