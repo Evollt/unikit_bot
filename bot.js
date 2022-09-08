@@ -171,8 +171,24 @@ bot.hear(/^мой id$/i, msg => {
 bot.hear(/^расписание препод$/i, msg => {
     checkFollowing(msg)
     if(isFollowing == true) {
-        msg.send(`${parsText[1]}: ${parsLinks[1]}`)
-        msg.send(`${parsText[3]}${parsText[4]}${parsText[5]}: ${parsLinks[4]}`)
+        // парсинг сайта
+        axios.get('https://www.mgkit.ru/studentu/raspisanie-zanatij').then(html => {
+            const $ = cheerio.load(html.data)
+            $('a').each((i, elem) => {
+                let href = $(elem).attr('href')
+                // знак вопроса после переменной стоит из-за includes
+                if(href?.includes('https://drive.google.com/file/d/')) {
+                    parsLinks.push(href)
+                    parsText.push($(elem).text())
+                }
+            })
+            // логируем все данные, чтобы если что легко дебажить)
+            console.log(parsLinks)
+            console.log(parsText)
+
+            msg.send(`${parsText[1]}: ${parsLinks[1]}`)
+            msg.send(`${parsText[3]}${parsText[4]}${parsText[5]}: ${parsLinks[4]}`)
+        })
     } else {
         msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
     }
