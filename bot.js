@@ -4,6 +4,7 @@ const { HearManager } = require('@vk-io/hear')
 const fs = require('fs')
 const { mails } = require('./files/mails')
 const { builder } = require('./controllers/KeyboardController')
+const { parser } = require('./controllers/ParserController.js')
 
 // инициализация бота
 const vk = new VK({
@@ -13,7 +14,8 @@ const vk = new VK({
 
 // начальные переменные для будущего использования
 let isFollowing = true
-
+let parsLinks = []
+let parsText = []
 // подключение слушателя событий
 const bot = new HearManager()
 
@@ -129,7 +131,7 @@ bot.hear(/^ответы$/i, msg => {
 bot.hear(/^расписание$/i, msg => {
     checkFollowing(msg)
     if(isFollowing == true) {
-        const { parsLinks, parsText } = require('./controllers/ParserController.js')
+        parser()
         // msg.send(`${text[4]}${text[5]}${text[6]}: ${links[5]}`)
         // msg.send(`${text[10]}${text[11]}${text[12]}: ${links[11]}`)
         msg.send(`${parsText[2]}: ${parsLinks[2]}`)
