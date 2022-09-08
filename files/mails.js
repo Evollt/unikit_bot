@@ -6,7 +6,8 @@ const mails = [
     'Смекаев Дмитрий Станиславович - d.smekayev@mgutm.ru\n',
     'Маликов Евгений Валерьевич - eugene@malikow.ru\n',
     'Елдашева Лариса Владимировна - stt80161@mail.ru\n',
-    'Крылов Евгений Николаевич - @ekrylov1987\n'
+    'Крылов Евгений Николаевич - @ekrylov1987\n',
+    'Александров Роман Викторович - director@mgkit.ru\n'
 ]
 
 module.exports = {
