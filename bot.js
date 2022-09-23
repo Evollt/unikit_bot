@@ -5,7 +5,7 @@ const fs = require('fs')
 const { parsLinks, parsText } = require('./controllers/ParserController.js')
 const { mails } = require('./files/mails')
 const { builder } = require('./controllers/KeyboardController')
-const { connection } = require('./controllers/dbController.js')
+const { connection } = require('./controllers/db.js')
 
 // инициализация бота
 const vk = new VK({
@@ -82,7 +82,7 @@ setInterval(function () {
     }
     console.log('check')
 }, 240000)
-//
+// 240000
 // слушает событие по новым сообщениям
 vk.updates.on('message_new', bot.middleware)
 
