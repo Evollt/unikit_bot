@@ -13,6 +13,8 @@ const vk = new VK({
 	token: ''
 });
 
+
+
 // начальные переменные для будущего использования
 let isFollowing = true
 let text = []
