@@ -1,5 +1,6 @@
-const mysql = require('mysql2')
+const mysql = require('mysql')
 
+// создание подключения
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -17,6 +18,7 @@ connection.connect(err => {
 })
 
 
+// экспорт подключения для будущего использования команд mysql
 module.exports = {
     connection
 }

@@ -2,7 +2,7 @@
 const { VK } = require('vk-io')
 const { HearManager } = require('@vk-io/hear')
 const fs = require('fs')
-const { parsLinks, parsText } = require('./controllers/ParserController.js')
+const { parsLinks, parsText, parser } = require('./controllers/ParserController.js')
 const { mails } = require('./files/mails')
 const { builder } = require('./controllers/KeyboardController')
 const { connection } = require('./controllers/db.js')
@@ -10,7 +10,7 @@ const { connection } = require('./controllers/db.js')
 // инициализация бота
 const vk = new VK({
     // получаем токен из heroku
-	token: ''
+    token: 'vk1.a._bW2ukPPPHkL_UNOAIya6Ujcb48_-cWSSO1H7elSshT6UZ9oonPOIZ3V21KqNpM-u04vvU3gn1_7SXOt2OZPRaHYGYkMm3Eve9dtl5UfYzu_QsjHBUxUpimO1OD-_nKN3iK6DebyQ9GZ7peYinZJJaMaq9JAnDqGTHf4KI4Y8PKynVDXQXIDPwCIC_a3g2VV'
 });
 
 
@@ -55,6 +55,7 @@ function createUser(msg) {
 
 // парсит в самом начале работы сервера через 5 секунд
 setTimeout(function () {
+    parser()
     text = parsText
     links = parsLinks
     console.log('Обновлено первый раз')
@@ -63,28 +64,12 @@ setTimeout(function () {
 
 // каждые 15 минут обновляет вывод информации парсером
 setInterval(function () {
+    parser()
     text = parsText
     links = parsLinks
     console.log('Обновлено')
 }, 900000);
 
-setInterval(function () {
-    if(text != parsText) {
-        // Проходимся по массиву пользователей и пересылаем всем подписчикам сообщения о новом расписании
-        connection.query(getUsers, (err, results) => {
-            for(let i = 0; i < results.length; i++) {
-                vk.api.messages.send({
-                    random_id: 0,
-                    user_id: results[i]['user_id'],
-                    peer_id: results[i]['user_id'],
-                    message: 'Появилось новое расписание'
-                })
-            }
-        })
-    }
-    console.log('check')
-}, 240000)
-// 240000
 // слушает событие по новым сообщениям
 vk.updates.on('message_new', bot.middleware)
 
@@ -190,11 +175,8 @@ bot.hear(/^ответы$/i, msg => {
 bot.hear(/^расписание$/i, msg => {
 checkFollowing(msg)
 if(isFollowing == true) {
-    // msg.send(`${text[2]}: ${links[2]}`)
-    // msg.send(`${text[6]}${text[7]}${text[8]}: ${links[7]}`)
     msg.send(`${text[4]}${text[5]}${text[6]}: ${links[5]}`)
     msg.send(`${text[8]}: ${links[8]}`)
-    msg.send(`${text[12]}${text[13]}${text[14]}: ${links[13]}`)
     createUser(msg)
 } else {
     msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
@@ -211,14 +193,39 @@ if(isFollowing == true) {
 }
 })
 
+bot.hear('кто тут педик', msg => {
+    // проверка на чат
+    if(msg.isChat) {
+        msg.reply('Да ты и есть педик, чтоб тебя черти драли нахуй во все щели. Иди нахуй вообще. На Русика быканул, хуйца соснул')
+        // кикает пользователя
+        vk.api.messages.removeChatUser({
+            chat_id: msg.chatId,
+            user_id: msg.senderId,
+        })
+    } else {
+        msg.reply('Да ты и есть педик, чтоб тебя черти драли нахуй во все щели. Иди нахуй вообще. На Русика быканул, хуйца соснул')
+    }
+})
+
+bot.hear(/^я гей$/i, msg => {
+    createUser(msg)
+    connection.query(`SELECT * FROM users WHERE user_id=${msg.senderId}`, (err, result) => {
+        console.log(result)
+        for(i = 0; i < result.length; i++) {
+            if(result[i].role == 'admin') {
+                msg.send('Нет, ты натурал')
+            } else {
+                msg.send('Все правильно, ты гей на ' + Math.ceil(Math.random() * 100) + '%')
+            }
+        }
+    })
+})
+
 bot.hear(/^расписание препод$/i, msg => {
 checkFollowing(msg)
 if(isFollowing == true) {
-        // msg.send(`${text[1]}: ${links[1]}`)
-        // msg.send(`${text[3]}${text[4]}${text[5]}: ${links[4]}`)
         msg.send(`${text[1]}${text[2]}${text[3]}: ${links[2]}`)
         msg.send(`${text[7]}: ${links[7]}`)
-        msg.send(`${text[9]}${text[10]}${text[11]}: ${links[10]}`)
         createUser(msg)
     } else {
         msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
