@@ -2,10 +2,11 @@
 const { VK } = require('vk-io')
 const { HearManager } = require('@vk-io/hear')
 const fs = require('fs')
-const { parsLinks, parsText, parser } = require('./controllers/ParserController.js')
 const { mails } = require('./files/mails')
 const { builder } = require('./controllers/KeyboardController')
 const { connection } = require('./controllers/db.js')
+const axios = require('axios')
+const cheerio = require('cheerio')
 
 // инициализация бота
 const vk = new VK({
@@ -19,6 +20,8 @@ const vk = new VK({
 let isFollowing = true
 let text = []
 let links = []
+let parsText = []
+let parsLinks = []
 let getUsers = "SELECT * from `users`"
 
 // подключение слушателя событий
@@ -52,23 +55,6 @@ function createUser(msg) {
         }
     })
 }
-
-// парсит в самом начале работы сервера через 5 секунд
-setTimeout(function () {
-    parser()
-    text = parsText
-    links = parsLinks
-    console.log('Обновлено первый раз')
-}, 5000)
-
-
-// каждые 15 минут обновляет вывод информации парсером
-setInterval(function () {
-    parser()
-    text = parsText
-    links = parsLinks
-    console.log('Обновлено')
-}, 900000);
 
 // слушает событие по новым сообщениям
 vk.updates.on('message_new', bot.middleware)
@@ -175,8 +161,7 @@ bot.hear(/^ответы$/i, msg => {
 bot.hear(/^расписание$/i, msg => {
 checkFollowing(msg)
 if(isFollowing == true) {
-    msg.send(`${text[4]}${text[5]}${text[6]}: ${links[5]}`)
-    msg.send(`${text[8]}: ${links[8]}`)
+    msg.send('Вот ссылка на расписание: https://www.mgkit.ru/studentu/raspisanie-zanatij')
     createUser(msg)
 } else {
     msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
@@ -193,7 +178,7 @@ if(isFollowing == true) {
 }
 })
 
-bot.hear('кто тут педик', msg => {
+bot.hear(/^кто тут педик$/i, msg => {
     // проверка на чат
     if(msg.isChat) {
         msg.reply('Да ты и есть педик, чтоб тебя черти драли нахуй во все щели. Иди нахуй вообще. На Русика быканул, хуйца соснул')
@@ -224,8 +209,7 @@ bot.hear(/^я гей$/i, msg => {
 bot.hear(/^расписание препод$/i, msg => {
 checkFollowing(msg)
 if(isFollowing == true) {
-        msg.send(`${text[1]}${text[2]}${text[3]}: ${links[2]}`)
-        msg.send(`${text[7]}: ${links[7]}`)
+        msg.send('Вот ссылка на преподавательское расписание: https://www.mgkit.ru/studentu/raspisanie-zanatij')
         createUser(msg)
     } else {
         msg.send('Подпишитесь, пожалуйста, на эту группу: https://vk.com/unikit_dairy')
